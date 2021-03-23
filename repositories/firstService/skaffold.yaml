@@ -1,0 +1,36 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: first-service
+profiles:
+
+  ### DEVELOPMENT
+  - name: dev
+    activation:
+      - command: dev
+    build:
+      local: {
+        push: false,
+        useBuildkit: true,
+        concurrency: 0
+      }
+      artifacts:
+        - image: golang/application
+          context: .
+          docker:
+            dockerfile: docker/Dockerfile-dev
+    deploy:
+      kubeContext: docker-desktop
+      helm:
+        releases:
+          - name: first-service
+            chartPath: "helm"
+            valuesFiles: ["helm/values.yaml", "helm/values-dev.yaml"]
+            namespace: "test"
+            createNamespace: true
+            remote: false
+            upgradeOnChange: true
+            setFiles:
+              envFile: ".env.development"
+            artifactOverrides:
+              app.image: golang/application

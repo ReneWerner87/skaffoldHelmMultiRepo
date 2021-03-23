@@ -1,0 +1,5 @@
+.env
+.idea/
+.vscode/settings.json
+*-debug.log
+!.gitkeep

@@ -1,0 +1,17 @@
+# Requires Skaffold v1.21! .. or latest build from HEAD (see guide here: https://github.com/GoogleContainerTools/skaffold/issues/5396)
+apiVersion: skaffold/v2beta12
+kind: Config
+metadata:
+  name: gco.cluster
+requires:
+  - path: repositories/firstService
+    activeProfiles:
+      - name: dev
+        activatedBy: [ 'dev' ]
+
+profiles:
+  - name: dev   # needed for connecting root profiles to child profiles
+    activation:
+      - command: dev
+    deploy:     # needed to prevent error "deploy.kube-context is not the same"
+      kubeContext: docker-desktop
